@@ -13,7 +13,7 @@ export default new Vuex.Store({
         bottoms : [],
         detailData: {}  ,
         cart : [],
-        totalItem : 0
+        totalItem : 0,
     },
     mutations : {
         
@@ -76,8 +76,12 @@ export default new Vuex.Store({
         },
         
         getDetail(context,data){
+            console.log('masuk get detail');
+            
             ax.get(`/products/${data}`)
             .then(({data})=>{
+                console.log('data detail', data);
+                
                 context.commit('setDetail', data)
             })
             .catch(err =>{

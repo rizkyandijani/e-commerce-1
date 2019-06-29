@@ -5,6 +5,7 @@ import productPage from './views/productPage'
 import detailProduct from './components/detailProduct'
 import addProduct from './views/addProduct'
 import cartPage from './views/cartPage'
+import editPage from './views/editPage'
 Vue.use(Router)
 
 export default new Router({
@@ -41,6 +42,11 @@ export default new Router({
       path : '/cartPage',
       name : 'cartPage',
       component : cartPage
+    },
+    {
+      path : '/editPage/:id',
+      name : 'editPage',
+      component : editPage
     }
   ]
 })

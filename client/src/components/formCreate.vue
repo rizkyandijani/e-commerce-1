@@ -1,5 +1,5 @@
 <template>
-  <v-form>
+  <v-form v-if="check">
     <v-text-field
       v-model="name"
       :counter="30"
@@ -105,7 +105,10 @@ a {
 
 
 <script>
+import mapState from 'vuex'
+
   export default {
+    props : ['product'],
     components : {
 
     },
@@ -186,6 +189,29 @@ a {
                 this.imageUrl = ''
             }
         }
+    },
+    created(){
+      console.log('mounted',this.product);
+      
+    },
+    mounted(){
+      console.log('mounted',this.product);
+    },
+    computed: {
+      check(){
+        if (this.product !== undefined){
+          console.log('computed product ada isi');
+          
+            this.name = this.product.name
+            this.description = this.product.description
+            this.price = this.product.price
+            this.stock = this.product.stock
+            this.category = this.product.category
+            this.imageUrl = this.product.image
+
+            return true
+        }
+      }
     }
   }
 </script>

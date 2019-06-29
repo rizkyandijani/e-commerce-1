@@ -17,6 +17,9 @@
 
             </v-layout>
             <v-layout row justify-center>
+                <router-link :to="`/editPage/${detailData._id}`">
+                    <v-btn>Edit</v-btn>
+                </router-link>
                 <router-link to='/productPage'>
                     <v-btn>close</v-btn>
                 </router-link>
@@ -43,6 +46,13 @@ export default {
     },
     created(){
         
+    },
+    methods : {
+        editProduct(){
+            console.log('edit trigerred');
+            
+            this.$store.dispatch('getDetail', this.product._id)
+        }
     },
     computed : {
         ...mapState(['detailData'])

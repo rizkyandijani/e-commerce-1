@@ -61,10 +61,6 @@ export default {
         }
     },
     methods : {
-        addToCart(){
-            console.log('triger add to cart');
-            
-        },
         detailing(){
             console.log('dispatch detail');
             this.$store.dispatch('getDetail',this.product._id)

@@ -13,13 +13,6 @@
                 </v-carousel>
             </v-layout>
             <v-container fluid class="category-container">
-                <!-- <v-layout class="white--text m-2" row lg12>
-                    <v-flex lg12 style="text-align : center">
-                        <h3>
-                            Categories
-                        </h3>
-                    </v-flex><br>
-                </v-layout> -->
                 <v-layout row>
                     <v-flex lg12 row class="d-flex text-center" style="text-decoration : none;">
                         <a @click.prevent="products = allProducts" class="category" href="">all product</a>
@@ -99,9 +92,7 @@ export default {
                 {src : 'https://images.unsplash.com/photo-1559924542-af829296ad33?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60'}
 
             ],
-            // isLogin : this.$store.state.isLogin,
             products : []
-            // allProducts : this.products.top.concat(this.products.bottom)
         }
     },
     components : {
@@ -110,17 +101,14 @@ export default {
     },
     methods : {
         toLoginPage(){
-            console.log('trigered');
 
         }
     },
     mounted(){
-        console.log('masuk mounted',this.allProducts);
         this.products = this.allProducts
         
     },
     created(){
-        // alert("test")
         this.$store.dispatch('getProducts')
             .then((data)=>{
                 this.products = data
@@ -128,15 +116,11 @@ export default {
             .catch(err =>{
                 console.log(err);
             })
-        console.log('ini all products', this.allProducts);
         
         
     },
     computed : {
         ...mapState(['isLogin','tops', 'bottoms', 'allProducts']),
-        // top(){
-        //     return this.allProducts.filter(obj=>obj.category === "top")
-        // }
     }
 }
 </script>
