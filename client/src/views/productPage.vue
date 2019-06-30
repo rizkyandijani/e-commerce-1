@@ -21,19 +21,19 @@
                     </v-flex>
                 </v-layout>
                 <v-layout>
-                    <v-flex>
+                    <v-flex id="productDetail">
                          <transition
                             name="fade"
                             mode="out-in"
                             >
-                        <router-view class="mt-3" />
+                        <router-view class="mt-3" v-on:removeCard="removeFromList"/>
                          </transition>
                     </v-flex>
                 </v-layout>
             </v-container>
         <v-layout wrap justify-center style="background-color : rgba(146, 119, 119, 0.58); margin : 10px; height : auto;" >
             <v-flex lg2 xs2 v-for="product in products" :key="product._id" >
-                <productCard v-bind:product="product"/>
+                <productCard v-bind:product="product" />
                 <!-- {{products}} -->
             </v-flex>
         </v-layout>
@@ -100,8 +100,15 @@ export default {
         productCard
     },
     methods : {
-        toLoginPage(){
-
+        removeFromList(id){
+            console.log('remove from list trigerred',id);
+            let temp = []
+            this.products.forEach(el =>{
+                if(el._id !== id){
+                    temp.push(el)
+                }
+            })
+            this.products = temp
         }
     },
     mounted(){

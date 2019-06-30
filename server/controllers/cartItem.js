@@ -75,12 +75,16 @@ class CartItemController{
     }
 
     static updateStatus(req,res,next){
+        console.log('masuk update status cartItem');
+        
         let setVal = {}
-        req.body.status && (setVal.status = req.body.status)
+        setVal.status = 'close'
 
         CartItem
         .findByIdAndUpdate(req.params.cartItemId, setVal, {new : true})
         .then(updated =>{
+            console.log('ini updated', updated);
+            
             res.status(200).json(updated)
         })
         .catch(next)

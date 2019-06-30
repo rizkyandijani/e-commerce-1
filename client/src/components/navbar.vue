@@ -39,7 +39,7 @@
         </v-toolbar>
          <v-navigation-drawer v-model="drawer" app class="red darken-3">
             <v-list>
-                <v-list-tile v-for="link in links" :key="link.text" router :to="link.route">
+                <v-list-tile v-for="link in links" :key="link.text" router :to="link.route" style="font-size  : 16px">
                     <v-list-tile-action>
                         <v-icon class="white--text">{{link.icon}}</v-icon>
                     </v-list-tile-action>
@@ -148,8 +148,9 @@ export default {
             dialog3 : false,
             links : [
                 {icon : 'dashboard', text: 'Home', route: '/'},
-                {icon : 'people', text: 'Products', route: '/productPage'},
-                {icon : 'library_add', text: 'Add product', route: '/addProduct'}
+                {icon : 'list', text: 'Products', route: '/productPage'},
+                {icon : 'library_add', text: 'Add product', route: '/addProduct'},
+                {icon : 'people', text: 'user profile', route: `/userPage/${localStorage.userId}`}
             ],
             login : {
                 email : '',
@@ -176,7 +177,7 @@ export default {
         toCartPage(){
             if(this.isLogin){
                 this.$router.push('/cartPage')
-                this.$router.dispatch('getCart')
+                this.$store.dispatch('getCart')
             }else{
                 this.dialog1 = true
             }
@@ -223,6 +224,7 @@ export default {
         // console.log('haleeeew',this.isLogin);
         if(localStorage.token){
             this.$store.dispatch('getCart')
+            // this.$router.push('/productPage')
         }
     },
     computed : {

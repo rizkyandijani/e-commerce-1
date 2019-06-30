@@ -3,6 +3,7 @@ const User = require('../models/user')
 const Product = require('../models/product')
 module.exports = {
     authenticate: function(req,res,next){
+        console.log('ini di auth',req.headers);
         if(req.headers.hasOwnProperty('token')){
             console.log('masuk auth', req.headers);
             

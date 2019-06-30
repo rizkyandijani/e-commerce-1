@@ -14,12 +14,18 @@ export default new Vuex.Store({
         detailData: {}  ,
         cart : [],
         totalItem : 0,
+        onEdit : false,
+        userTransaction : [],
+        transactionDetail : {}
     },
     mutations : {
         
         setIsLogin(state, data){
             state.isLogin = data
-            console.log('check',state.isLogin);
+        },
+
+        setOnEdit(state,data){
+            state.onEdit = true
         },
         
         setProducts(state,data){
@@ -40,9 +46,6 @@ export default new Vuex.Store({
             state.tops = top
             state.bottoms = bottom
             state.allProducts = data
-            console.log('store all',state.allProducts);
-            
-            console.log('products', state.allProducts);
         },
 
         setDetail(state,data){
@@ -55,6 +58,14 @@ export default new Vuex.Store({
 
         setTotalItem(state,data){
             state.totalItem = data
+        },
+
+        setUserTransaction(state,data){
+            state.userTransaction = data
+        },
+
+        setDetailTransaction(state,data){
+            state.transactionDetail = data
         }
 
     },
@@ -62,6 +73,10 @@ export default new Vuex.Store({
 
         cekIsLogin(context,data){
             context.commit('setIsLogin', true)
+        },
+
+        onEdit(context,data){
+            context.commit('setOnEdit',true)
         },
 
         getProducts(context,data){
@@ -76,12 +91,8 @@ export default new Vuex.Store({
         },
         
         getDetail(context,data){
-            console.log('masuk get detail');
-            
             ax.get(`/products/${data}`)
-            .then(({data})=>{
-                console.log('data detail', data);
-                
+            .then(({data})=>{                
                 context.commit('setDetail', data)
             })
             .catch(err =>{
@@ -90,9 +101,6 @@ export default new Vuex.Store({
         },
 
         login(context,data){
-            console.log('masuk actions login',data)
-            
-            
             let dataLogin = {
                 email : data.email,
                 password : data.password
@@ -100,23 +108,18 @@ export default new Vuex.Store({
             ax.post('/login',dataLogin)
             .then(({data})=>{
                 ax.defaults.headers.common['token'] = data.token;
-                console.log('ini data',data);
                 localStorage.setItem('token', data.token)
                 localStorage.setItem('userId', data._id)
                 localStorage.setItem('name', `${data.firstName} ${data.lastName}`)
-                console.log('ini local storage', localStorage.token, localStorage.name);
                 context.commit('setIsLogin', true)
                 this.dispatch('createCart')
             })
             .catch(err =>{
-                console.log('masuk error');
-                
                 console.log(err);
             })
         },
 
         register(context,data){
-            console.log('masuk actions register', data);
             let dataRegister = {
                 firstName : data.firstName,
                 lastName : data.lastName,
@@ -126,7 +129,6 @@ export default new Vuex.Store({
             ax.post('/register',dataRegister)
             .then(({data})=>{
                 console.log('data register',data);
-                
             })
             .catch(err =>{
                 console.log(err.response.data);
@@ -134,7 +136,6 @@ export default new Vuex.Store({
         },
 
         create(context,data){
-            console.log('masuk store create',data);
             let formData = new FormData()
             formData.append('name', data.name)
             formData.append('description', data.description)
@@ -143,6 +144,41 @@ export default new Vuex.Store({
             formData.append('category', data.category)
             formData.append('image', data.file)
             ax.post('/products', formData)
+            .then(({data}) =>{
+                this.dispatch('getProducts')
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        editProduct(context,data){
+            let formData = new FormData()
+            formData.append('name', data.name)
+            formData.append('description', data.description)
+            formData.append('price', data.price)
+            formData.append('stock', data.stock)
+            formData.append('category', data.category)
+            formData.append('image', data.file)
+
+            ax.patch(`/products/${data.id}`, formData)
+            .then(({data}) =>{
+                this.dispatch('getProducts')
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        deleteProduct(context,data){
+            ax.delete(`/products/${data}`)
+            .then(({data})=>{
+                this.dispatch('getProducts')
+                this.dispatch('getCart')
+            })
+            .catch(err =>{
+                console.log(err);
+            })
         },
 
         createCart(context,data){
@@ -208,7 +244,7 @@ export default new Vuex.Store({
         getCart(context,data){
             console.log('get cartItem', localStorage.cartId);
             
-            ax.get(`/cartItems/${localStorage.cartId}/getByCard`)
+            ax.get(`/cartItems/${localStorage.cartId}/getByCart`)
             .then(({data})=>{
                 console.log('ini data getCartItem', data);
                 
@@ -218,6 +254,85 @@ export default new Vuex.Store({
                     total += el.quantity
                 })
                 context.commit('setTotalItem',total)
+            })
+        },
+
+        getUserTransaction(context,data){
+            console.log('masuk get user transaction');
+            ax.get(`/carts/getUserCart/${data}/getAll`)
+            .then(({data})=>{
+                context.commit('setUserTransaction', data)
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        checkout(context,data){
+            console.log('data checkout',data);
+            this.dispatch('closeCartItem', data.list)
+            this.dispatch('updateStock', data.list)
+            ax.patch(`/carts/${localStorage.cartId}/checkout`,{
+                totalPrice : data.totalPrice,
+                cartItemList : data.list, 
+                receiver : data.receiver,
+                address : data.address,
+                phoneNumber : data.phoneNumber
+            })
+            .then(({data})=>{
+                console.log(data);
+                this.dispatch('createCart')
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        closeCartItem(context,data){
+            console.log('data close cart item',data);
+            let arrOfPromises =[]
+            data.forEach(el =>{
+                arrOfPromises.push(ax.patch(`/cartItems/${el._id}/updateStatus`))
+            })
+            Promise.all(arrOfPromises)
+            .then(values =>{
+                console.log('ini hasil promise all');
+                console.log(values);
+                values.forEach(el =>{
+                    console.log('data', el.data);      
+                })
+            })
+            .catch(err =>{
+                console.log(err);
+                
+            })
+        },
+
+        updateStock(context,data){
+            console.log('mau update stock', data);
+            let arrOfPromises = []
+            data.forEach(el =>{
+                console.log('iini elllll', el.quantity);
+                arrOfPromises.push(ax.patch(`/products/${el.productId._id}/updateQuantity`,{quantity : el.quantity }))
+            })
+            Promise.all(arrOfPromises)
+            .then(values =>{
+                values.forEach(el =>{
+                    console.log('ini data quantity updated', el.data);
+                })
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        getDetailTransaction(context,data){
+            ax.get(`/carts/${data}`)
+            .then(({data})=>{
+                context.commit('setDetailTransaction', data)
+            })
+            .catch(err =>{
+                console.log(err);
             })
         },
 

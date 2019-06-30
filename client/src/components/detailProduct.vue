@@ -18,8 +18,9 @@
             </v-layout>
             <v-layout row justify-center>
                 <router-link :to="`/editPage/${detailData._id}`">
-                    <v-btn>Edit</v-btn>
+                    <v-btn @click="onEdit">Edit</v-btn>
                 </router-link>
+                <v-btn @click="deleteItem">delete</v-btn>
                 <router-link to='/productPage'>
                     <v-btn>close</v-btn>
                 </router-link>
@@ -41,21 +42,49 @@ import { mapState } from 'vuex'
 export default {
     data(){
         return{
-
+            
         }
     },
     created(){
         
     },
     methods : {
-        editProduct(){
+        onEdit(){
             console.log('edit trigerred');
             
-            this.$store.dispatch('getDetail', this.product._id)
+            this.$store.dispatch('onEdit')
+        },
+        deleteItem(){
+            console.log('awaaaaaaaaaaaaaaal',this.finishDelete, this.productUpdated);
+            
+            this.$swal({
+                title: 'Are you sure want to delete products?',
+                text: "You won't be able to revert this!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+                })
+                .then((result) => {
+                if (result.value) {
+                    this.dialog = true
+                    this.$store.dispatch('deleteProduct',this.detailData._id)
+                        console.log('akhiiiiiiiir', this.finishDelete, this.productUpdated);
+                        this.dialog = false
+                        this.$swal(
+                        'Deleted!',
+                        'Your Product has been deleted.',
+                        'success'
+                        )
+                        this.$emit('removeCard',this.detailData._id)
+                        this.$router.push('/productPage')
+                }
+            })
         }
     },
     computed : {
-        ...mapState(['detailData'])
+        ...mapState(['detailData', 'finishDelete', 'productUpdated'])
     }
 }
 </script>

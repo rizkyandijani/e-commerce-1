@@ -10,7 +10,8 @@ router.get('/:productId',ProductController.getOne)
 router.use(authenticate)
 
 router.post('/',upload.multer.single('image'),upload.sendUploadToGCS,ProductController.create)
-router.patch('/:productId', authorize,ProductController.update)
+router.patch('/:productId', authorize, upload.multer.single('image'),upload.sendUploadToGCS,ProductController.update)
+router.patch('/:productId/updateQuantity', ProductController.updateQuantity)
 router.delete('/:productId', authorize,ProductController.delete)
 
 module.exports = router

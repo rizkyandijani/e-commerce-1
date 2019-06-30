@@ -16,13 +16,19 @@ class CartController{
         
         Cart
         .findById(req.params.cartId)
+        .populate({
+            path : 'cartItemList',
+            populate : {
+                path : 'productId'
+            }
+        })
         .then(cart =>{
             res.status(200).json(cart)
         })
         .catch(next)
     }
 
-    static getUserCart(req,res,next){
+    static getCart(req,res,next){
         console.log('masuk get user cart');
         
         Cart
@@ -48,7 +54,12 @@ class CartController{
                 let newCart = new Cart({
                     userId : req.loggedUser.id,
                     status : 'open',
-                    cartItemList : []
+                    totalPrice : 0,
+                    receiver : 'none',
+                    address : 'none',
+                    phoneNumber : 'none',
+                    cartItemList : [],
+                    created_at : new Date()
                 })
         
                 return newCart.save()
@@ -61,17 +72,43 @@ class CartController{
     }
 
     static getUserCart(req,res,next){
+        console.log('masuk get user by user id', req.params.userId);
+        
         Cart
-        .findOne({userId : req.params.userId})
+        .find({userId : req.params.userId})
+        .populate({
+            path : 'cartItemList',
+            populate : {
+                path : 'productId'
+            }
+        })
         .then(cart =>{
-            res.status(200).json(cart)
+            let arr = []
+            cart.forEach(el =>{
+                if(el.status !== 'open'){
+                    arr.push(el)
+                }
+            })
+            console.log('then',arr);
+            
+            res.status(200).json(arr)
         })
         .catch(next)
     }
 
-    static updateStatus(req,res,next){
+    static updateStatusCheckout(req,res,next){
+        console.log('jalan update ckeckout di controlller',req.body);
+        
         let setVal = {}
-        req.body.status && (setVal.status = req.body.status)
+        setVal.status = 'processed'
+        req.body.totalPrice && (setVal.totalPrice = req.body.totalPrice)
+        req.body.cartItemList && (setVal.cartItemList = req.body.cartItemList)
+        req.body.receiver && (setVal.receiver = req.body.receiver)
+        req.body.address && (setVal.address = req.body.address)
+        req.body.phoneNumber && (setVal.phoneNumber = req.body.phoneNumber)
+        setVal.created_at = `${new Date().getMonth()}-${new Date().getDate()}-${new Date().getFullYear()}`
+        console.log('ini setVal', setVal);
+        
         Cart
         .findByIdAndUpdate(req.params.cartId, setVal,{new : true})
         .then(updated =>{

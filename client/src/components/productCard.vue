@@ -64,6 +64,7 @@ export default {
         detailing(){
             console.log('dispatch detail');
             this.$store.dispatch('getDetail',this.product._id)
+            window.scrollTo(100, 100)
         },
         addToCart(){
             this.$store.dispatch('addToCart', this.product._id)

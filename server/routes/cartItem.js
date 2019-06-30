@@ -3,7 +3,7 @@ const CartItemController = require('../controllers/cartItem')
 
 router.get('/', CartItemController.getAll)
 router.get('/:cartItemId',CartItemController.getOne)
-router.get('/:cartId/getByCard', CartItemController.getCartProducts)
+router.get('/:cartId/getByCart', CartItemController.getCartProducts)
 router.post('/:cartId/:productId',CartItemController.create)
 router.patch('/:cartItemId/updateStatus', CartItemController.updateStatus)
 router.patch('/:cartItemId/increaseQuantity', CartItemController.increaseQuantity)

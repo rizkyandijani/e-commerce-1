@@ -30,17 +30,20 @@ let cartItemSchema = new Schema({
 
 cartItemSchema.pre('findOneAndUpdate', function(next){
     console.log('cek this', this._update.quantity);
-    
-    Product
-    .findById(this._update.productId)
-    .then(product =>{
-        console.log('ini product di model', product);
-        
-       this._update.totalPrice = product.price * (this._update.quantity)
-       console.log(this);
-       
-       next()
-    })
+    if(this._update.quantity){
+        Product
+        .findById(this._update.productId)
+        .then(product =>{
+            console.log('ini product di model', product);
+            
+           this._update.totalPrice = product.price * (this._update.quantity)
+           console.log(this);
+           
+           next()
+        })
+    }else{
+        next()
+    }
 })
 
 cartItemSchema.pre('save', function(next){

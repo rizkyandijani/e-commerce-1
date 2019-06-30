@@ -6,11 +6,10 @@ router.use(authenticate)
 
 router.get('/', CartController.getAll)
 router.get('/:cartId',CartController.getOne)
-router.get('/getUserCart/:cartId', CartController.getUserCart)
+router.get('/getUserCart/:cartId/getbyCart', CartController.getCart)
+router.get('/getUserCart/:userId/getAll', CartController.getUserCart)
 router.post('/',CartController.create)
-router.patch('/:cartId/checkout', CartController.updateStatus)
-router.patch('/:cartId/:cartItemId/add', CartController.addToCartItemList)
-router.patch('/:cartId/:cartItemId/remove', CartController.removeFromCartItemList)
+router.patch('/:cartId/checkout', CartController.updateStatusCheckout)
 router.delete('/:cartId', CartController.delete)
 
 module.exports = router

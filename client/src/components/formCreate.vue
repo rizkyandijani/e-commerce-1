@@ -57,12 +57,19 @@
             <img :src="imageUrl" alt="" srcset="" width="300px;"><br>
     </v-layout>
     <v-btn
+    v-if="!onEdit"
     color = 'success'
     @click="submit"
     >
     Submit
     </v-btn>
-
+    <v-btn
+    v-if="onEdit"
+    color = 'success'
+    @click="edit"
+    >
+    Edit
+    </v-btn>
     <v-btn
       color="error"
       @click="clear"
@@ -122,10 +129,11 @@ import mapState from 'vuex'
         imageName: '',
         imageUrl: '',
         imageFile: '',
+        onEdit : false
         }),
     methods: {
         submit () {
-          if(this.name && this.description && this.stock && this.price && this.imageFile && this.category ){
+          if(this.name && this.description && this.stock && this.price && this.category && this.imageFile ){
             console.log(this.name, this.description, this.stock, this.price, this.imageFile);
             let createData = {
               name : this.name,
@@ -138,6 +146,43 @@ import mapState from 'vuex'
             this.$store.dispatch('create',createData)
             this.$swal('successfully added product', '' , 'success')
             this.clear()
+            this.$router.push('/productPage')
+          }else{
+            this.$swal(`form can't be empty`, '', 'error')
+          }
+        },
+        edit(){
+          console.log('masuk edit di form create');
+          
+          if(this.name && this.description && this.stock && this.price && this.category ){
+            if(this.imageFile){
+              let editData = {
+                id : this.product._id,
+                name : this.name,
+                description : this.description,
+                price : this.price,
+                stock : this.stock,
+                category : this.category,
+                file : this.imageFile
+              }
+              this.$store.dispatch('editProduct', editData)
+              this.$swal('successfully added product', '' , 'success')
+              this.clear()
+            }else{
+              let editData = {
+                id : this.product._id,
+                name : this.name,
+                description : this.description,
+                price : this.price,
+                stock : this.stock,
+                category : this.category,
+                file : ''
+              }
+              this.$store.dispatch('editProduct', editData)
+              this.$swal('successfully added product', '' , 'success')
+              this.clear()
+              this.$router.push('/productPage')
+            }
           }else{
             this.$swal(`form can't be empty`, '', 'error')
           }
@@ -191,8 +236,8 @@ import mapState from 'vuex'
         }
     },
     created(){
-      console.log('mounted',this.product);
-      
+      console.log('created',this.product);
+      this.check
     },
     mounted(){
       console.log('mounted',this.product);
@@ -201,7 +246,7 @@ import mapState from 'vuex'
       check(){
         if (this.product !== undefined){
           console.log('computed product ada isi');
-          
+            this.onEdit = true
             this.name = this.product.name
             this.description = this.product.description
             this.price = this.product.price
@@ -210,6 +255,8 @@ import mapState from 'vuex'
             this.imageUrl = this.product.image
 
             return true
+        }else{
+          return true
         }
       }
     }
