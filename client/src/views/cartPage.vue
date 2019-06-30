@@ -134,7 +134,7 @@ export default {
                     if (result.value) {
                             this.dialog = false
                             this.$swal(
-                            'Deleted!',
+                            'CheckOut!',
                             'Your order is being processed.',
                             'success'
                             )

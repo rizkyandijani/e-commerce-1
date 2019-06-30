@@ -4,7 +4,16 @@
     <v-content style="padding : 0">
       <router-view></router-view>
       <v-footer class="pa-3 " style="background-color : #460000; color : white; font-size : 18px">
+        <div style="text-decoration : none; color : white">
+          <a style="color: white" href="https://github.com/rizkyandijani?tab=repositories" class="ml-2">
+            <i class="fab fa-github fa-lg"></i>
+          </a>
+          <a style="color: white" href="https://id.linkedin.com/in/rizky-andijani-7629ba121/" class="ml-3">
+            <i class="fab fa-linkedin fa-lg"></i>
+          </a>
+        </div>
         <v-spacer></v-spacer>
+        <div class="mr-3">Copyright : Rizky Andi Jani</div>
         <div>&copy; {{ new Date().getFullYear() }}</div>
       </v-footer>
     </v-content>
