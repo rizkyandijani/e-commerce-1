@@ -17,10 +17,10 @@
 
             </v-layout>
             <v-layout row justify-center>
-                <router-link :to="`/editPage/${detailData._id}`">
+                <router-link v-show="this.access === 'root'" :to="`/editPage/${detailData._id}`">
                     <v-btn @click="onEdit">Edit</v-btn>
                 </router-link>
-                <v-btn @click="deleteItem">delete</v-btn>
+                <v-btn v-show="this.access === 'root'" @click="deleteItem">delete</v-btn>
                 <router-link to='/productPage'>
                     <v-btn>close</v-btn>
                 </router-link>
@@ -84,7 +84,7 @@ export default {
         }
     },
     computed : {
-        ...mapState(['detailData', 'finishDelete', 'productUpdated'])
+        ...mapState(['detailData', 'finishDelete', 'productUpdated', 'access'])
     }
 }
 </script>

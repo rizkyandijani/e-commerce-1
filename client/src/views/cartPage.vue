@@ -26,21 +26,16 @@
                             </v-container>
                         </v-card>
                         <v-layout justify-center v-if="count" row lg12>
-                            <v-flex d-flex lg6>
+                            <h1 v-if="cart.length === 0">No Product Added</h1><br>
+
+                            <v-flex v-if="cart.length > 0" d-flex lg6>
                                 <h1>Total Price : {{totalPrice | currency}}</h1>
                                 <h1>Total Item : {{totalItem}}</h1>
                             </v-flex>
-                            <v-btn @click.prevent="dialog = true" color="success">Checkout</v-btn>
+                            <v-btn v-if="cart.length > 0" @click.prevent="dialog = true" color="success">Checkout</v-btn>
+                            <v-btn v-if="cart.length === 0" @click.prevent="dialog = true" color="success" disabled>Checkout</v-btn>
+
                         </v-layout>
-                    </v-card>
-                    <v-card v-if="cart.length === 0">
-                        <v-container>
-                            <v-layout>
-                                <v-flex>
-                                    <h1>No Product Added</h1>
-                                </v-flex>
-                            </v-layout>
-                        </v-container>
                     </v-card>
                 </v-flex>
             </v-layout>
@@ -140,7 +135,7 @@ export default {
                             this.dialog = false
                             this.$swal(
                             'Deleted!',
-                            'Your Product has been deleted.',
+                            'Your order is being processed.',
                             'success'
                             )
                         let data = {

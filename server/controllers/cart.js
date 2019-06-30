@@ -1,12 +1,16 @@
 const Cart = require('../models/cart')
-
+const User = require('../models/user')
+const { nodeMailer } = require('../helpers/nodeMailer')
 class CartController{
 
     static getAll(req,res,next){
+        console.log('masuk get all controller');
+        
         Cart
         .find({})
         .then(data =>{
-            res.send(200).json(data)
+            console.log(data);
+            res.status(200).json(data)
         })
         .catch(next)
     }
@@ -108,9 +112,33 @@ class CartController{
         req.body.phoneNumber && (setVal.phoneNumber = req.body.phoneNumber)
         setVal.created_at = `${new Date().getMonth()}-${new Date().getDate()}-${new Date().getFullYear()}`
         console.log('ini setVal', setVal);
-        
+        let updatedCart;
         Cart
         .findByIdAndUpdate(req.params.cartId, setVal,{new : true})
+        .then(updated =>{
+            updatedCart = updated
+
+            return User.findById(updated.userId)
+
+        })
+        .then(user =>{
+            if(user){
+                nodeMailer(user.email,'alert',updatedCart._id)
+            }
+            res.status(200).json(updatedCart)
+
+        })
+        .catch(next)
+    }
+
+    static updateStatusClose(req,res,next){
+        console.log('masuk status close update');
+        
+        let setVal = {}
+        setVal.status = 'closed'
+
+        Cart
+        .findByIdAndUpdate(req.params.cartId, setVal, {new : true})
         .then(updated =>{
             res.status(200).json(updated)
         })

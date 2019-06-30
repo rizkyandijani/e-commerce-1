@@ -8,6 +8,7 @@ import cartPage from './views/cartPage'
 import editPage from './views/editPage'
 import userPage from './views/userPage'
 import detailTransaction from './components/detailTransaction'
+import adminPage from './views/adminPage'
 Vue.use(Router)
 
 export default new Router({
@@ -52,8 +53,16 @@ export default new Router({
     },
     {
       path : '/userPage/:userId',
-      name : userPage,
+      name : 'userPage',
       component : userPage,
+      children : [
+        {path : 'detailTrans/:cartId', component : detailTransaction}
+      ]
+    },
+    {
+      path : '/adminPage',
+      name : 'adminPage',
+      component : adminPage,
       children : [
         {path : 'detailTrans/:cartId', component : detailTransaction}
       ]

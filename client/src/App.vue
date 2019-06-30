@@ -47,12 +47,13 @@ export default {
       this.$store.dispatch('getProducts')
       let productId = this.$route.params.productId
       console.log('ada product id', productId);
-      
-      this.$store.dispatch('getDetail',productId)
-
+      if(productId){
+        this.$store.dispatch('getDetail',productId)
+      }
       ax.defaults.headers.common['token'] = localStorage.token;
       this.$store.dispatch('getUserTransaction', localStorage.userId)
-      
+      this.$store.dispatch('getAllTransaction', localStorage.userId)
+
     }
   }
 }

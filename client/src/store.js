@@ -16,12 +16,18 @@ export default new Vuex.Store({
         totalItem : 0,
         onEdit : false,
         userTransaction : [],
-        transactionDetail : {}
+        transactionDetail : {},
+        allTransaction : [],
+        access : 'customer'
     },
     mutations : {
         
         setIsLogin(state, data){
             state.isLogin = data
+        },
+
+        setAccess(state,data){
+            state.access = data
         },
 
         setOnEdit(state,data){
@@ -66,6 +72,10 @@ export default new Vuex.Store({
 
         setDetailTransaction(state,data){
             state.transactionDetail = data
+        },
+        
+        setAllTransaction(state,data){
+            state.allTransaction = data
         }
 
     },
@@ -73,6 +83,9 @@ export default new Vuex.Store({
 
         cekIsLogin(context,data){
             context.commit('setIsLogin', true)
+            if(localStorage.email === 'master@holygrail.com'){
+                context.commit('setAccess', 'root')
+            }
         },
 
         onEdit(context,data){
@@ -111,8 +124,12 @@ export default new Vuex.Store({
                 localStorage.setItem('token', data.token)
                 localStorage.setItem('userId', data._id)
                 localStorage.setItem('name', `${data.firstName} ${data.lastName}`)
+                localStorage.setItem('email', data.email)
                 context.commit('setIsLogin', true)
                 this.dispatch('createCart')
+                if(data.email === 'master@holygrail.com'){
+                    this.access = 'root' 
+                }
             })
             .catch(err =>{
                 console.log(err);
@@ -242,12 +259,8 @@ export default new Vuex.Store({
         },
 
         getCart(context,data){
-            console.log('get cartItem', localStorage.cartId);
-            
             ax.get(`/cartItems/${localStorage.cartId}/getByCart`)
             .then(({data})=>{
-                console.log('ini data getCartItem', data);
-                
                 context.commit('setCart',data)
                 let total = 0
                 data.forEach(el =>{
@@ -296,8 +309,6 @@ export default new Vuex.Store({
             })
             Promise.all(arrOfPromises)
             .then(values =>{
-                console.log('ini hasil promise all');
-                console.log(values);
                 values.forEach(el =>{
                     console.log('data', el.data);      
                 })
@@ -312,7 +323,6 @@ export default new Vuex.Store({
             console.log('mau update stock', data);
             let arrOfPromises = []
             data.forEach(el =>{
-                console.log('iini elllll', el.quantity);
                 arrOfPromises.push(ax.patch(`/products/${el.productId._id}/updateQuantity`,{quantity : el.quantity }))
             })
             Promise.all(arrOfPromises)
@@ -330,6 +340,32 @@ export default new Vuex.Store({
             ax.get(`/carts/${data}`)
             .then(({data})=>{
                 context.commit('setDetailTransaction', data)
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        updateTransactionClose(context,data){
+            ax.patch(`/carts/${data}/closeTransaction`)
+            .then(({data})=>{
+                this.dispatch('getUserTransaction', localStorage.userId)
+            })
+            .catch(err =>{
+                console.log(err);
+            })
+        },
+
+        getAllTransaction(context,data){
+            ax.get('/carts/')
+            .then(({data})=>{
+                let arr = []
+                data.forEach(el =>{
+                    if(el.status !== 'open'){
+                        arr.push(el)
+                    }
+                })
+                context.commit('setAllTransaction',arr)
             })
             .catch(err =>{
                 console.log(err);

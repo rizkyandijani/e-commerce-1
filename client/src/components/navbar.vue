@@ -147,11 +147,10 @@ export default {
             dialog2 : false,
             dialog3 : false,
             links : [
-                {icon : 'dashboard', text: 'Home', route: '/'},
-                {icon : 'list', text: 'Products', route: '/productPage'},
-                {icon : 'library_add', text: 'Add product', route: '/addProduct'},
-                {icon : 'people', text: 'user profile', route: `/userPage/${localStorage.userId}`}
-            ],
+                    {icon : 'dashboard', text: 'Home', route: '/'},
+                    {icon : 'list', text: 'Products', route: '/productPage'},
+                    {icon : 'people', text: 'user profile', route: `/userPage/${localStorage.userId}`},
+                ],
             login : {
                 email : '',
                 password : '',
@@ -189,6 +188,7 @@ export default {
         },
         toRegister(){
             this.$store.dispatch('register',this.register)
+            this.$swal('successfully registerd your account','','success')
             this.clearRegister()
         },
         clearLogin(){
@@ -224,11 +224,25 @@ export default {
         // console.log('haleeeew',this.isLogin);
         if(localStorage.token){
             this.$store.dispatch('getCart')
+            if(this.access === 'root' || localStorage.email === 'master@holygrail.com'){
+                this.links = [
+                {icon : 'dashboard', text: 'Home', route: '/'},
+                {icon : 'list', text: 'Products', route: '/productPage'},
+                {icon : 'library_add', text: 'Add product', route: '/addProduct'},
+                {icon : 'people', text: 'Admin Page', route: `/adminPage`}
+                ]
+            }else{ 
+                this.links = [
+                    {icon : 'dashboard', text: 'Home', route: '/'},
+                    {icon : 'list', text: 'Products', route: '/productPage'},
+                    {icon : 'people', text: 'user profile', route: `/userPage/${localStorage.userId}`},
+                ]
+            }
             // this.$router.push('/productPage')
         }
     },
     computed : {
-        ...mapState(['isLogin', 'totalItem'])
+        ...mapState(['isLogin', 'totalItem','access'])
     }
 }
 </script>
