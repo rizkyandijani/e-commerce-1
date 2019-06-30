@@ -8,7 +8,7 @@
                     <v-card v-for="transaction in allTransaction" v-bind:key="transaction._id" style="">
                     <a href="" @click.prevent="toDetail(`${transaction._id}`)" style="text-decoration : none; font-size : 20px; color : green">{{transaction.created_at.substring(0,10)}}</a>
                     <span> -- status : {{transaction.status}}</span><br>
-                    <v-btn v-if="transaction.status === 'processed'" @click.prevent="transactionClose(`${transaction._id}`)" color="success">confirm package arrival</v-btn>
+                    <v-btn v-if="transaction.status === 'processed'" color="success">on Delivery</v-btn>
                     <v-btn v-if="transaction.status === 'closed'" color="success" disabled>package arrived</v-btn>
                     </v-card>
                 </v-flex>

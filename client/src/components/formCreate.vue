@@ -146,7 +146,7 @@ import mapState from 'vuex'
             this.$store.dispatch('create',createData)
             this.$swal('successfully added product', '' , 'success')
             this.clear()
-            this.$router.push('/productPage')
+            // this.$router.push('/productPage')
           }else{
             this.$swal(`form can't be empty`, '', 'error')
           }
