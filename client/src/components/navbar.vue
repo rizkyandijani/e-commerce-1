@@ -5,7 +5,7 @@
         app
         style="background-color: rgba( 255, 0, 0, 0.1)"
         >
-            <v-toolbar-side-icon class="white--text" @click="drawer = !drawer"></v-toolbar-side-icon>
+            <v-toolbar-side-icon v-show="isLogin" class="white--text" @click="drawer = !drawer"></v-toolbar-side-icon>
             <v-toolbar-title class="text-uppercase white--text">
             <span>HOLY</span>
             <span class="font-weight-light">GRAIL</span>
@@ -168,6 +168,7 @@ export default {
     methods : {
         signOut(){
             console.log('masuk signout');
+            this.drawer = false
             this.$swal(`goodbye ${localStorage.name}`,'','success')
             this.$store.dispatch('signout')
             localStorage.clear()
@@ -222,6 +223,16 @@ export default {
                 this.$swal('Login Success', '', 'success')
                 // this.$router.push('/')
             }
+        },
+        access(){
+            if(this.access === 'root'){
+                this.links = [
+                {icon : 'dashboard', text: 'Home', route: '/'},
+                {icon : 'list', text: 'Products', route: '/productPage'},
+                {icon : 'library_add', text: 'Add product', route: '/addProduct'},
+                {icon : 'people', text: 'Admin Page', route: `/adminPage`}
+                ]
+            }
         }
     },
     created(){
@@ -244,6 +255,8 @@ export default {
                 ]
             }
             // this.$router.push('/productPage')
+        }else{
+            this.drawer = false
         }
     },
     computed : {
