@@ -76,6 +76,10 @@ export default new Vuex.Store({
         
         setAllTransaction(state,data){
             state.allTransaction = data
+        },
+
+        setAccess(state,data){
+            state.access = data
         }
 
     },
@@ -105,7 +109,7 @@ export default new Vuex.Store({
         
         getDetail(context,data){
             ax.get(`/products/${data}`)
-            .then(({data})=>{                
+            .then(({data})=>{
                 context.commit('setDetail', data)
             })
             .catch(err =>{
@@ -128,7 +132,7 @@ export default new Vuex.Store({
                 context.commit('setIsLogin', true)
                 this.dispatch('createCart')
                 if(data.email === 'master@holygrail.com'){
-                    this.access = 'root' 
+                    context.commit('setAccess','root')
                 }
             })
             .catch(err =>{
@@ -374,6 +378,8 @@ export default new Vuex.Store({
 
         signout(context,data){
             context.commit('setIsLogin', false)
+            context.commit('setAccess', 'customer')
+
             context.commit('setTotalItem', 0)
         }
         

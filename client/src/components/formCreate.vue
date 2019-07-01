@@ -112,7 +112,7 @@ a {
 
 
 <script>
-import mapState from 'vuex'
+import {mapState} from 'vuex'
 
   export default {
     props : ['product'],
@@ -236,8 +236,10 @@ import mapState from 'vuex'
         }
     },
     created(){
-      console.log('created',this.product);
-      this.check
+      console.log('created',this.product,this.access, this.isLogin);
+      if(!localStorage.token || this.access !== 'root'){
+        this.$router.push('/')
+      }
     },
     mounted(){
       console.log('mounted',this.product);
@@ -258,7 +260,8 @@ import mapState from 'vuex'
         }else{
           return true
         }
-      }
+      },
+      ...mapState(['isLogin', 'access'])
     }
   }
 </script>

@@ -172,6 +172,11 @@ export default {
             this.$store.dispatch('signout')
             localStorage.clear()
             this.$router.push('/')
+            this.links = [
+                {icon : 'dashboard', text: 'Home', route: '/'},
+                {icon : 'list', text: 'Products', route: '/productPage'},
+                {icon : 'people', text: 'user profile', route: `/userPage/${localStorage.userId}`},
+            ]
         },
         toCartPage(){
             if(this.isLogin){
@@ -231,7 +236,7 @@ export default {
                 {icon : 'library_add', text: 'Add product', route: '/addProduct'},
                 {icon : 'people', text: 'Admin Page', route: `/adminPage`}
                 ]
-            }else{ 
+            }else{
                 this.links = [
                     {icon : 'dashboard', text: 'Home', route: '/'},
                     {icon : 'list', text: 'Products', route: '/productPage'},

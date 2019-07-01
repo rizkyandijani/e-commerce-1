@@ -49,16 +49,16 @@ export default {
     }
   },
   created(){
+    let productId = this.$route.params.productId
+    // console.log('ada product id', this.$route.params);
+      if(productId){
+        this.$store.dispatch('getDetail',productId)
+      }
     if(localStorage.token){
       console.log('triggered created app');
       
       this.$store.dispatch('cekIsLogin')
       this.$store.dispatch('getProducts')
-      let productId = this.$route.params.productId
-      console.log('ada product id', productId);
-      if(productId){
-        this.$store.dispatch('getDetail',productId)
-      }
       ax.defaults.headers.common['token'] = localStorage.token;
       this.$store.dispatch('getUserTransaction', localStorage.userId)
       this.$store.dispatch('getAllTransaction', localStorage.userId)

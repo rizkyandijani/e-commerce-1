@@ -21,9 +21,10 @@
 
 <script>
 import formCreate from '@/components/formCreate'
-
+import { mapState } from 'vuex'
 
 export default {
+    
     data(){
         return {
 
@@ -31,6 +32,9 @@ export default {
     },
     components : {
         formCreate
+    },
+    computed : {
+        ...mapState(['isLogin', 'access'])
     },
     methods : {
         toHome(){

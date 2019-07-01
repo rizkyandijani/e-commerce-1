@@ -127,7 +127,7 @@ export default {
         
     },
     computed : {
-        ...mapState(['isLogin','tops', 'bottoms', 'allProducts']),
+        ...mapState(['isLogin','tops', 'bottoms', 'allProducts','access']),
     }
 }
 </script>

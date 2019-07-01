@@ -17,10 +17,10 @@
 
             </v-layout>
             <v-layout row justify-center>
-                <router-link v-show="this.access === 'root'" :to="`/editPage/${detailData._id}`">
+                <router-link v-if="this.access == 'root'" :to="`/editPage/${detailData._id}`">
                     <v-btn @click="onEdit">Edit</v-btn>
                 </router-link>
-                <v-btn v-show="this.access === 'root'" @click="deleteItem">delete</v-btn>
+                <v-btn v-if="this.access == 'root'" @click="deleteItem">delete</v-btn>
                 <router-link to='/productPage'>
                     <v-btn>close</v-btn>
                 </router-link>
