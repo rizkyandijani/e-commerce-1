@@ -10,7 +10,8 @@ const route = require('./routes/index')
 const mongoose = require('mongoose')
 const errorHandler = require('./middlewares/errorHandler')
 
-let local = 'mongodb://localhost/ecommerce_1' + process.env.NODE_ENV
+// let local = 'mongodb://localhost/ecommerce_1' + process.env.NODE_ENV
+let local = 'mongodb+srv://admin:admin@cluster0-efobx.gcp.mongodb.net/holygrail?retryWrites=true&w=majority'
 
 mongoose.connect(local,{useNewUrlParser : true})
 

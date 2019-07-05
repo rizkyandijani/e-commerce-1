@@ -16,7 +16,10 @@
                         <span>delivery address :  {{transaction.address}}</span><br>
                         <span>contact number :  {{transaction.phoneNumber}}</span><br>
                     </div>
-                    <router-link :to="'/userPage/'+ userId">
+                    <router-link v-if="email !== 'master@holygrail.com'" :to="'/userPage/'+ userId">
+                        <v-btn color="success">close</v-btn>
+                    </router-link>
+                    <router-link v-if="email === 'master@holygrail.com'" :to="'/adminpage'">
                         <v-btn color="success">close</v-btn>
                     </router-link>
                 </v-flex>
@@ -29,10 +32,11 @@
 export default {
     data(){
         return{
-            userId : localStorage.userId
+            userId : localStorage.userId,
+            email : localStorage.email
         }
     },
-    props : ['transaction'],
+    props : ['transaction','access'],
 
 }
 </script>
